@@ -6,20 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  // Animate the actual Pacifico letter contours in writing order.
-  document.fonts.ready.then(() => {
-    document.querySelectorAll('.written-brand text').forEach((word, row) => {
-      const letters = word.textContent;
-      word.textContent = '';
-      [...letters].forEach((letter, index) => {
-        const span = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-        span.textContent = letter;
-        span.style.setProperty('--ink-delay', `${row * 1.5 + index * .19}s`);
-        word.appendChild(span);
-      });
-    });
-    document.querySelector('.written-brand')?.classList.add('is-writing');
-  });
+
 
   // --- 3. Scroll Reveal Animations ---
 

@@ -1847,8 +1847,7 @@ nav .nav-contact { border: 1px solid #748546; border-radius: 9px; color: #e4df66
 .ink { font-family: 'Pacifico', cursive; font-size: 116px; font-weight: 400; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .ink-blue { color: var(--color-cyan); fill: currentColor; }
 .ink-yellow { color: var(--color-lime); fill: currentColor; font-size: 110px; }
-.is-writing .ink tspan { stroke: currentColor; stroke-dasharray: 1200; stroke-dashoffset: 1200; fill: transparent; animation: write-ink 1.7s ease forwards; animation-delay: var(--ink-delay); }
-@keyframes write-ink { 0% { stroke-dashoffset: 1200; fill: transparent; } 65% { fill: transparent; } 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; fill: currentColor; } }
+
 .hero-headline { font-size: clamp(1.8rem, 2.8vw, 2.6rem); line-height: 1.16; letter-spacing: -.035em; font-weight: 500; margin: 12px 0 18px; }
 .hero-subtitle { max-width: 425px; font-size: 1.05rem; line-height: 1.75; margin-bottom: 26px; font-weight: 400; animation: none; opacity: 1; transform: none; }
 .hero-ctas { gap: 12px; opacity: 1; transform: none; animation: none; }
