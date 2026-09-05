@@ -1918,3 +1918,13 @@ footer { background: #05151e; border-top: 1px solid #ffffff14; }
 }
 
 @font-face { font-family: Pacifico; src: url("assets/Pacifico-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Static header/footer marks share the hero's exact Pacifico composition. */
+.static-brand-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.logo { display: block; width: 140px; flex-shrink: 0; }
+.footer-brand { display: block; width: 230px; max-width: 100%; }
+.static-brand-svg .ink { fill: currentColor; stroke: none; animation: none; }
+@media (max-width: 650px) {
+  .logo { width: 120px; }
+  .footer-brand { margin-inline: auto; }
+}
