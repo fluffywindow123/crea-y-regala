@@ -13,7 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crea y Regala | Productos Personalizados y Diseños 3D</title>
   <meta name="description" content="Personalización de tazas sublimadas, termos en vinil e impresión 3D de alta calidad. Diseños únicos creados a tu medida en Crea y Regala.">
-  <link rel="stylesheet" href="styles.css?v=3.0">
+  <link rel="stylesheet" href="styles.css?v=4.0">
 </head>
 <body>
 
@@ -34,6 +34,7 @@
       <a href="#categorias">Categorías</a>
       <a href="#galeria-3d">Modelos 3D</a>
       <a href="#contacto" class="nav-contact">Hablemos ↗</a>
+      <a href="#publicaciones">Publicaciones</a>
     </nav>
   </header>
 
@@ -170,6 +171,35 @@
   </section>
   <script src="makerworld.js?v=3.0" defer></script>
 
+  <section class="section publications" id="publicaciones" aria-labelledby="posts-heading">
+    <div class="section-header"><span class="section-tag">DESDE NUESTRO TALLER</span><h2 class="section-title" id="posts-heading">Lo nuevo en <span>Crea y Regala</span></h2></div>
+    <p id="posts-status" role="status">Cargando publicaciones…</p>
+    <button type="button" id="posts-retry" class="btn btn-secondary" hidden>Reintentar</button>
+    <article id="featured-post" class="featured-post" aria-label="Publicación principal" hidden tabindex="-1"></article>
+    <div id="more-posts" hidden><h3>Más publicaciones</h3><div id="posts-grid" class="posts-grid"></div><button id="posts-more" class="btn btn-secondary" type="button" hidden>Ver más publicaciones</button></div>
+    <a class="posts-facebook" href="https://www.facebook.com/profile.php?id=100092747371943" target="_blank" rel="noopener noreferrer">Visitar nuestra página de Facebook ↗</a>
+    <noscript><p>Consulta nuestras publicaciones en Facebook.</p></noscript>
+  </section>
+  <dialog id="comments-dialog" class="comments-dialog" aria-labelledby="comments-title">
+    <div class="comments-header"><h2 id="comments-title">Comentarios</h2><button id="comments-close" type="button" aria-label="Cerrar comentarios">✕</button></div>
+    <div class="comments-scroll">
+      <p id="comments-status" role="status" aria-live="polite"></p>
+      <div id="comments-list"></div>
+      <button id="comments-more" class="btn btn-secondary" type="button" hidden>Cargar más comentarios</button>
+      <button id="comments-retry" class="btn btn-secondary" type="button" hidden>Reintentar</button>
+    </div>
+    <form id="comment-form" class="comment-form">
+      <label for="comment-text">Tu comentario</label>
+      <textarea id="comment-text" rows="3" maxlength="2000" placeholder="Escribe un comentario…" disabled required></textarea>
+      <p id="comment-auth-status" role="status"></p>
+      <button id="facebook-login" class="btn btn-primary" type="button">Continuar con Facebook para comentar</button>
+      <button id="comment-submit" class="btn btn-primary" type="submit" hidden>Publicar</button>
+      <a id="comment-facebook" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Comentar en Facebook ↗</a>
+    </form>
+  </dialog>
+  <script src="posts-config.js?v=4.0" defer></script>
+  <script src="posts.js?v=4.0" defer></script>
+
   <!-- Contact & Request Section -->
   <section class="section reveal-on-scroll" id="contacto">
     <div class="section-header">
@@ -228,7 +258,7 @@
         <a href="#" class="social-link" title="Instagram">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         </a>
-        <a href="#" class="social-link" title="Facebook">
+        <a href="https://www.facebook.com/profile.php?id=100092747371943" class="social-link" title="Facebook" target="_blank" rel="noopener noreferrer">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
         </a>
         <a href="#" class="social-link" title="WhatsApp">
