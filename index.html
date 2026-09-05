@@ -13,7 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crea y Regala | Productos Personalizados y Diseños 3D</title>
   <meta name="description" content="Personalización de tazas sublimadas, termos en vinil e impresión 3D de alta calidad. Diseños únicos creados a tu medida en Crea y Regala.">
-  <link rel="stylesheet" href="styles.css?v=2.1">
+  <link rel="stylesheet" href="styles.css?v=3.0">
 </head>
 <body>
 
@@ -28,7 +28,8 @@
           <text x="55" y="280" class="ink ink-yellow">Y regala</text>
         </svg>
     </a>
-    <nav aria-label="Navegación principal">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" hidden>Menú <span aria-hidden="true">☰</span></button>
+    <nav id="main-navigation" aria-label="Navegación principal">
       <a href="#inicio">Inicio</a>
       <a href="#categorias">Categorías</a>
       <a href="#galeria-3d">Modelos 3D</a>
@@ -130,81 +131,44 @@
 
   <!-- Interactive Customizer Section -->
 
-  <!-- MakerWorld Section -->
-  <section class="section reveal-on-scroll makerworld-section" id="galeria-3d">
+  <section class="section makerworld-section" id="galeria-3d" aria-labelledby="mw-heading">
     <div class="section-header">
-      <span class="section-tag" style="color: var(--color-cyan);">Modelos 3D Populares</span>
-      <h2 class="section-title">Modelos de Impresión Frecuentes</h2>
-      <p style="color: var(--text-muted); margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-        Realizamos impresiones en 3D basadas en los diseños más populares y funcionales de la comunidad.
-      </p>
+      <span class="section-tag">INSPIRACIÓN PARA TU PRÓXIMA IMPRESIÓN</span>
+      <h2 class="section-title" id="mw-heading">Explora diseños de <span>MakerWorld</span></h2>
+      <p>Encuentra una idea, conoce a su creador y consulta el modelo original.</p>
     </div>
-
-    <div class="makerworld-grid">
-      <!-- Card 1: Dragon -->
-      <div class="mw-card">
-        <div class="mw-img-wrapper">
-          <span class="mw-badge">MakerWorld</span>
-          <img src="https://images.unsplash.com/photo-1615655406736-b37c4fabf923?w=500&auto=format&fit=crop&q=60" alt="Flexi Dragon 3D Model">
-        </div>
-        <div class="mw-content">
-          <h3 class="mw-title">Flexi Dragon Articulado</h3>
-          <p class="mw-author">Diseñado por McGyBeer</p>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-            Uno de los modelos más solicitados. Completamente articulado desde las patas hasta la cola, impreso en una sola pieza. Ideal como juguete antiestrés.
-          </p>
-          <a href="https://makerworld.com/" target="_blank" class="mw-link">
-            <span>Ver en MakerWorld</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          </a>
-        </div>
+    <form id="mw-search-form" class="mw-search-form" role="search">
+      <div class="mw-search-field">
+        <label for="mw-query">¿Qué te gustaría imprimir?</label>
+        <input id="mw-query" type="search" maxlength="120" placeholder="Ej. dragon, organizer, planter…" autocomplete="off">
       </div>
-
-      <!-- Card 2: Pot -->
-      <div class="mw-card">
-        <div class="mw-img-wrapper">
-          <span class="mw-badge">MakerWorld</span>
-          <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=500&auto=format&fit=crop&q=60" alt="Geometric Planter 3D Model">
-        </div>
-        <div class="mw-content">
-          <h3 class="mw-title">Maceta Geométrica Minimalista</h3>
-          <p class="mw-author">Diseñado por TwinD</p>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-            Macetas modernas con patrones poligonales. Incorporan sistema de drenaje oculto. Ideales para suculentas o plantas pequeñas de interior.
-          </p>
-          <a href="https://makerworld.com/" target="_blank" class="mw-link">
-            <span>Ver en MakerWorld</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          </a>
-        </div>
+      <div class="mw-sort-field">
+        <label for="mw-sort">Ordenar por</label>
+        <select id="mw-sort"><option value="popular">Popularidad del directorio</option><option value="recent">Más recientes</option></select>
       </div>
-
-      <!-- Card 3: Organizer -->
-      <div class="mw-card">
-        <div class="mw-img-wrapper">
-          <span class="mw-badge">MakerWorld</span>
-          <img src="https://images.unsplash.com/photo-1590244921950-b88d8f7bf4f2?w=500&auto=format&fit=crop&q=60" alt="Modular Desktop Organizer 3D Model">
-        </div>
-        <div class="mw-content">
-          <h3 class="mw-title">Organizador de Escritorio Modular</h3>
-          <p class="mw-author">Diseñado por PrintablesClub</p>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-            Sistema de almacenamiento con cajones deslizantes y soportes magnéticos para lápices, clips y memorias USB. Configurable a tus necesidades.
-          </p>
-          <a href="https://makerworld.com/" target="_blank" class="mw-link">
-            <span>Ver en MakerWorld</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          </a>
-        </div>
-      </div>
+      <button class="btn btn-primary" type="submit">Buscar diseños</button>
+    </form>
+    <div class="mw-suggestions" aria-label="Búsquedas sugeridas">
+      <button type="button" data-query="dragon">Dragones</button>
+      <button type="button" data-query="organizer">Organizadores</button>
+      <button type="button" data-query="planter">Macetas</button>
+      <button type="button" data-query="keychain">Llaveros</button>
+      <button type="button" data-query="">Ver populares</button>
     </div>
-
-    <!-- MakerWorld Attribution Banner -->
-    <div class="makerworld-attribution" style="margin-top: 3rem;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-      <span>Todos los diseños 3D catalogados y fabricados aquí son <strong>diseños 3d obtenidos de <a href="https://makerworld.com/" target="_blank">MakerWorld</a></strong> bajo licencias Creative Commons.</span>
+    <p class="mw-source">Directorio de <a href="https://estimator.tryar.in/api" target="_blank" rel="noopener noreferrer">MakerWorld Estimator</a>, un servicio independiente. Incluye modelos indexados, no todo MakerWorld. Prueba también búsquedas en inglés.</p>
+    <p id="mw-status" role="status" aria-live="polite">Cargando diseños…</p>
+    <div id="mw-results" class="mw-results" aria-busy="true"></div>
+    <div class="mw-pagination">
+      <button id="mw-previous" type="button" class="btn btn-secondary" hidden>← Anterior</button>
+      <span id="mw-page"></span>
+      <button id="mw-next" type="button" class="btn btn-secondary" hidden>Siguiente →</button>
+      <button id="mw-retry" type="button" class="btn btn-secondary" hidden>Reintentar</button>
     </div>
+    <p class="mw-source">Cada diseño conserva la licencia de su creador. La disponibilidad para fabricar o vender una impresión se confirma por modelo.</p>
+    <a href="https://makerworld.com/en" target="_blank" rel="noopener noreferrer">Explorar todo MakerWorld ↗</a>
+    <noscript><p>Activa JavaScript para usar el buscador de diseños.</p></noscript>
   </section>
+  <script src="makerworld.js?v=3.0" defer></script>
 
   <!-- Contact & Request Section -->
   <section class="section reveal-on-scroll" id="contacto">
@@ -283,6 +247,7 @@
 
 
 
-  <script src="script.js?v=2.0"></script>
+  <script src="script.js?v=3.0"></script>
+  <script src="responsive.js?v=3.0" defer></script>
 </body>
 </html>

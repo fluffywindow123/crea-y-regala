@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPageVisible = true;
 
     function animate() {
-      if (!isPageVisible) return;
+      if (!isPageVisible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 

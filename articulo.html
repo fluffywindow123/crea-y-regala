@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle del Diseño | Crea y Regala</title>
   <meta name="description" content="Explora las especificaciones técnicas y realiza tu encargo personalizado directo a WhatsApp en Crea y Regala.">
-  <link rel="stylesheet" href="styles.css?v=2.1">
+  <link rel="stylesheet" href="styles.css?v=3.0">
 </head>
 <body>
 
@@ -31,7 +31,8 @@
           <text x="55" y="280" class="ink ink-yellow">Y regala</text>
         </svg>
     </a>
-    <nav aria-label="Navegación principal">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" hidden>Menú <span aria-hidden="true">☰</span></button>
+    <nav id="main-navigation" aria-label="Navegación principal">
       <a href="index.html#inicio">Inicio</a>
       <a href="catalogo.html">Catálogo</a>
       <a href="index.html#galeria-3d">Modelos 3D</a>
@@ -135,6 +136,7 @@
     </div>
   </footer>
 
-  <script src="articulo.js?v=1.0.2"></script>
+  <script src="articulo.js?v=3.0"></script>
+  <script src="responsive.js?v=3.0" defer></script>
 </body>
 </html>

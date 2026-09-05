@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (canvas) {
     const ctx = canvas.getContext('2d');
     let stars = [];
-    const starCount = 200;
+    const starCount = window.innerWidth < 769 ? 35 : 65;
 
     let mouseX = 0;
     let mouseY = 0;
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPageVisible = true;
 
     function animate() {
-      if (!isPageVisible) return;
+      if (!isPageVisible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 

@@ -175,7 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render cards
     filteredProducts.forEach(product => {
-      const card = document.createElement('div');
+      const card = document.createElement('a');
+      card.href = `articulo.html?id=${encodeURIComponent(product.id)}`;
       card.className = `catalog-card ${product.category}-card`;
       card.innerHTML = `
         <span class="card-badge">${product.categoryLabel}</span>
@@ -193,9 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
       
-      card.addEventListener('click', () => {
-        window.location.href = `articulo.html?id=${product.id}`;
-      });
       
       catalogGrid.appendChild(card);
     });
@@ -227,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (canvas) {
     const ctx = canvas.getContext('2d');
     let stars = [];
-    const starCount = 200;
+    const starCount = window.innerWidth < 769 ? 35 : 65;
 
     let mouseX = 0;
     let mouseY = 0;
@@ -280,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPageVisible = true;
 
     function animate() {
-      if (!isPageVisible) return;
+      if (!isPageVisible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
