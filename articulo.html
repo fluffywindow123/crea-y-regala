@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    // Strip hash on load
+    if (window.location.hash) {
+      history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+  </script>
+  <meta charset="UTF-8">
+  <link rel="preload" href="assets/Pacifico-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Diseño | Crea y Regala</title>
+  <meta name="description" content="Explora las especificaciones técnicas y realiza tu encargo personalizado directo a WhatsApp en Crea y Regala.">
+  <link rel="stylesheet" href="styles.css?v=2.0">
+</head>
+<body>
+
+  <!-- Canvas for Starry Space Background -->
+  <canvas id="starry-background"></canvas>
+
+  <!-- Navigation Header -->
+  <header>
+    <a href="index.html#inicio" class="logo">
+      <span class="part-crea">Crea</span>
+      <span class="part-regala">Y regala</span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="index.html#inicio">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="index.html#galeria-3d">Modelos 3D</a>
+      <a href="index.html#contacto" class="nav-contact">Hablemos ↗</a>
+    </nav>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="section container" style="margin-top: 6rem; min-height: 70vh;">
+    
+    <!-- 1. Success Product Detail Layout (Mercado Libre Style) -->
+    <div class="product-detail-container" id="product-detail-layout" style="display: none;">
+      <!-- Left Column: Image Gallery -->
+      <div class="product-gallery">
+        <img id="product-img" src="" alt="Cargando producto...">
+      </div>
+      
+      <!-- Right Column: Purchase Details -->
+      <div class="product-purchase-card">
+        <span class="product-condition" id="product-tag">Diseño Exclusivo | Personalizable</span>
+        <h1 class="product-title-h1" id="product-title">Nombre del Producto</h1>
+        <span class="product-badge-theme" id="product-badge">Categoría</span>
+        <div class="product-price-large" id="product-price">$0.00 MXN</div>
+        
+        <p class="product-desc-p" id="product-desc">
+          Cargando descripción...
+        </p>
+
+        <h3 class="product-specs-title">Ficha Técnica</h3>
+        <table class="product-specs-table">
+          <tbody>
+            <tr>
+              <td class="spec-label">Material</td>
+              <td class="spec-value" id="spec-material">-</td>
+            </tr>
+            <tr>
+              <td class="spec-label">Detalles</td>
+              <td class="spec-value" id="spec-details">-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- WhatsApp Call To Action -->
+        <a href="#" target="_blank" class="btn btn-whatsapp" id="product-whatsapp-btn" style="padding: 1.1rem 1.5rem; font-size: 1.1rem; border-radius: 50px; font-weight: 700;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>Realizar pedido por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. Error / Product Not Found Layout -->
+    <div class="error-container" id="product-not-found-layout" style="display: none;">
+      <h2>¡Ups! Diseño no encontrado</h2>
+      <p>El artículo que estás buscando no existe en nuestra base de datos actual o ha cambiado de enlace.</p>
+      <a href="catalogo.html" class="btn btn-primary" style="display: inline-block;">Ver Catálogo de Diseños</a>
+    </div>
+
+    <!-- 3. Recommendations Showcase Block -->
+    <div class="recommendations-section" id="recommendations-container" style="display: none;">
+      <h3 class="recommendations-title">También te puede interesar</h3>
+      <div class="recommendations-grid" id="recommendations-grid">
+        <!-- Suggested items generated in articulo.js -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <div class="footer-brand">
+          <span class="f-crea">Crea</span>
+          <span class="f-regala">Y regala</span>
+        </div>
+        <p style="margin-top: 0.5rem; max-width: 400px; color: var(--text-dark);">
+          Regalos y productos personalizados que dejan huella. Hechos a mano con amor y tecnología digital.
+        </p>
+      </div>
+
+      <div class="social-links">
+        <a href="#" class="social-link" title="Instagram">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="#" class="social-link" title="Facebook">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-link" title="WhatsApp">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+      </div>
+
+      <div class="footer-credits">
+        <p>&copy; 2026 Crea y Regala. Todos los derechos reservados.</p>
+        <p class="footer-credits-mw" style="margin-top: 0.5rem; letter-spacing: 0.05em; font-size: 0.78rem;">
+          Diseños 3D obtenidos de MakerWorld.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="articulo.js?v=1.0.2"></script>
+</body>
+</html>
