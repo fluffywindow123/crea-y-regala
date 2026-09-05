@@ -87,11 +87,12 @@ header {
 
 .logo {
   font-family: var(--font-brand);
-  font-size: 1.8rem;
+  font-size: 1.35rem;
   text-decoration: none;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 0.85;
 }
 
 .logo .part-crea {
@@ -100,6 +101,8 @@ header {
 
 .logo .part-regala {
   color: var(--color-lime);
+  font-size: 0.9em;
+  padding-left: 0.35em;
 }
 
 nav {
@@ -1095,10 +1098,12 @@ footer {
 
 .footer-brand {
   font-family: var(--font-brand);
-  font-size: 2.2rem;
+  font-size: 1.75rem;
   margin-bottom: 0.5rem;
   display: inline-flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 0.85;
 }
 
 .footer-brand .f-crea {
@@ -1107,6 +1112,8 @@ footer {
 
 .footer-brand .f-regala {
   color: var(--color-lime);
+  font-size: 0.9em;
+  padding-left: 0.35em;
 }
 
 .footer-credits {
@@ -1833,7 +1840,7 @@ footer {
 body { background: var(--bg-primary); }
 #starry-background { background: transparent; opacity: .26; }
 header { padding: 1.05rem max(5vw, calc((100vw - 1280px)/2)); background: #071b26ed; border-color: #ffffff12; }
-.logo { font-size: 1.65rem; white-space: nowrap; }
+.logo { font-size: 1.35rem; white-space: nowrap; }
 nav { align-items: center; gap: 2rem; }
 nav a { color: #d9e3e7; font-size: .9rem; }
 nav .nav-contact { border: 1px solid #748546; border-radius: 9px; color: #e4df66; padding: .6rem 1rem; }
