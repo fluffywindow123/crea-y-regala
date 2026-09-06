@@ -91,10 +91,34 @@
     $('comment-auth-status').textContent=enabled?`Comentas como ${session.user.name}.`:session.user?'Facebook no permite publicar desde aquí con tu cuenta. Usa «Comentar en Facebook».':session.loginAvailable?'Inicia sesión para comprobar las opciones disponibles.':'El inicio de sesión aún no está disponible. Puedes comentar en Facebook.';
   }
   function openComments(post,trigger){
-    commentPost=post;focusReturn=trigger;commentsCursor=null;$('comment-text').value='';
-    $('comment-facebook').href=facebook(post.url)||config.FACEBOOK_PAGE_URL;
-    if(!dialog.open)dialog.showModal();document.body.classList.add('comments-open');loadComments();refreshSession();
+    commentPost=post;focusReturn=trigger;
+    const postUrl=facebook(post.url)||config.FACEBOOK_PAGE_URL;
+    const fbBtn=$('comment-facebook');
+    if(fbBtn) fbBtn.href=postUrl;
+
+    const container=$('fb-comments-container');
+    if(container){
+      container.innerHTML=`<div class="fb-comments" data-href="${postUrl}" data-width="100%" data-numposts="10" data-colorscheme="dark" data-order-by="reverse_time"></div>`;
+      if(window.FB && window.FB.XFBML){
+        window.FB.XFBML.parse(container);
+      }
+    }
+    if(!dialog.open)dialog.showModal();
+    document.body.classList.add('comments-open');
   }
+  window.fbAsyncInit = function() {
+    if (window.FB) {
+      window.FB.init({
+        appId: '367992518917446',
+        xfbml: true,
+        version: 'v20.0'
+      });
+      const container = $('fb-comments-container');
+      if (container && dialog && dialog.open) {
+        window.FB.XFBML.parse(container);
+      }
+    }
+  };
   function closeDialog(){
     if(matchMedia('(prefers-reduced-motion: reduce)').matches || !dialog.animate){dialog.close();return;}
     dialog.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(8px)'}],{duration:140}).finished.then(()=>dialog.close());
@@ -102,27 +126,9 @@
   $('comments-close').addEventListener('click',closeDialog);
   dialog.addEventListener('cancel',event=>{event.preventDefault();closeDialog();});
   dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDialog();}});
-  dialog.addEventListener('close',()=>{commentVersion++;commentController?.abort();document.body.classList.remove('comments-open');focusReturn?.focus();});
-  $('comments-retry').addEventListener('click',()=>loadComments());$('comments-more').addEventListener('click',()=>loadComments(true));
-  $('posts-more').addEventListener('click',()=>loadPosts(true));$('posts-retry').addEventListener('click',()=>loadPosts(!!posts.length));
-  $('facebook-login').addEventListener('click',async()=>{
-    popup=window.open('about:blank','crea-facebook-login','width=600,height=720');
-    if(!popup){$('comment-auth-status').textContent='Permite la ventana de inicio de sesión o comenta directamente en Facebook.';return;}
-    try{const data=await api('/auth/facebook',{method:'POST'});const url=facebook(data.url);if(!url)throw Error();popup.location.href=url;}
-    catch{popup.close();$('comment-auth-status').textContent='No se pudo iniciar sesión. Puedes comentar en Facebook.';}
-  });
-  window.addEventListener('message',event=>{
-    if(base&&event.origin===new URL(base).origin&&event.source===popup&&event.data?.type==='crea-facebook-auth'){refreshSession();popup=null;}
-  });
-  $('comment-form').addEventListener('submit',async event=>{
-    event.preventDefault();if(!session?.user||!session.canComment||!$('comment-text').value.trim())return;
-    const post=commentPost,text=$('comment-text').value.trim();$('comment-submit').disabled=true;$('comment-auth-status').textContent='Publicando comentario…';
-    try{const data=await api(`/posts/${encodeURIComponent(post.id)}/comments`,{method:'POST',body:JSON.stringify({message:text})});
-      if(!data.comment?.id)throw Error();
-      if(commentPost.id===post.id){$('comments-list').prepend(commentNode(data.comment));updateCount(data.total);$('comment-text').value='';$('comment-auth-status').textContent='Comentario publicado en Facebook.';}
-    }catch{$('comment-auth-status').textContent='El comentario no se publicó. Puedes copiarlo y comentar directamente en Facebook.';}
-    finally{$('comment-submit').disabled=false;}
-  });
+  dialog.addEventListener('close',()=>{document.body.classList.remove('comments-open');focusReturn?.focus();});
+  $('posts-more').addEventListener('click',()=>loadPosts(true));
+  $('posts-retry').addEventListener('click',()=>loadPosts(!!posts.length));
   if(!https(base)){status.textContent='Pronto podrás consultar nuestras publicaciones aquí. Mientras tanto, visítanos en Facebook.';return;}
   loadPosts();
 })();

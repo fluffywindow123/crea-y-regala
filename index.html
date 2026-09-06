@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="styles.css?v=4.0">
 </head>
 <body>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v20.0&appId=367992518917446"></script>
 
   <!-- Canvas for Starry Space Background -->
   <canvas id="starry-background"></canvas>
@@ -181,21 +183,18 @@
     <noscript><p>Consulta nuestras publicaciones en Facebook.</p></noscript>
   </section>
   <dialog id="comments-dialog" class="comments-dialog" aria-labelledby="comments-title">
-    <div class="comments-header"><h2 id="comments-title">Comentarios</h2><button id="comments-close" type="button" aria-label="Cerrar comentarios">✕</button></div>
-    <div class="comments-scroll">
-      <p id="comments-status" role="status" aria-live="polite"></p>
-      <div id="comments-list"></div>
-      <button id="comments-more" class="btn btn-secondary" type="button" hidden>Cargar más comentarios</button>
-      <button id="comments-retry" class="btn btn-secondary" type="button" hidden>Reintentar</button>
+    <div class="comments-header">
+      <h2 id="comments-title">Comentarios en Facebook</h2>
+      <button id="comments-close" type="button" aria-label="Cerrar comentarios">✕</button>
     </div>
-    <form id="comment-form" class="comment-form">
-      <label for="comment-text">Tu comentario</label>
-      <textarea id="comment-text" rows="3" maxlength="2000" placeholder="Escribe un comentario…" disabled required></textarea>
-      <p id="comment-auth-status" role="status"></p>
-      <button id="facebook-login" class="btn btn-primary" type="button">Continuar con Facebook para comentar</button>
-      <button id="comment-submit" class="btn btn-primary" type="submit" hidden>Publicar</button>
-      <a id="comment-facebook" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Comentar en Facebook ↗</a>
-    </form>
+    <div class="comments-scroll">
+      <div id="fb-comments-container">
+        <p id="comments-status" role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); padding: 24px 0;">Cargando comentarios oficiales de Facebook…</p>
+      </div>
+    </div>
+    <div class="comments-footer" style="padding: 14px 24px; border-top: 1px solid var(--border-card); display: flex; justify-content: flex-end;">
+      <a id="comment-facebook" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Ver o comentar en Facebook ↗</a>
+    </div>
   </dialog>
   <script src="posts-config.js?v=4.0" defer></script>
   <script src="posts.js?v=4.0" defer></script>
