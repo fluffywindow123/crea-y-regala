@@ -13,11 +13,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crea y Regala | Productos Personalizados y Diseños 3D</title>
   <meta name="description" content="Personalización de tazas sublimadas, termos en vinil e impresión 3D de alta calidad. Diseños únicos creados a tu medida en Crea y Regala.">
-  <link rel="stylesheet" href="styles.css?v=5.0">
+  <link rel="stylesheet" href="styles.css?v=6.0">
 </head>
 <body>
-  <div id="fb-root"></div>
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v20.0&appId=367992518917446"></script>
+
 
   <!-- Canvas for Starry Space Background -->
   <canvas id="starry-background"></canvas>
@@ -173,86 +172,62 @@
   </section>
   <script src="makerworld.js?v=3.0" defer></script>
 
+  <!-- Blog & Publications Section -->
   <section class="section publications" id="publicaciones" aria-labelledby="posts-heading">
-    <div class="section-header"><span class="section-tag">DESDE NUESTRO TALLER</span><h2 class="section-title" id="posts-heading">Lo nuevo en <span>Crea y Regala</span></h2></div>
-    <p id="posts-status" role="status"></p>
-    <button type="button" id="posts-retry" class="btn btn-secondary" hidden>Reintentar</button>
-    <article id="featured-post" class="featured-post" aria-label="Publicación principal" hidden tabindex="-1"></article>
-    <div id="more-posts" hidden><h3>Más publicaciones</h3><div id="posts-grid" class="posts-grid"></div><button id="posts-more" class="btn btn-secondary" type="button" hidden>Ver más publicaciones</button></div>
-    <a class="posts-facebook" href="https://www.facebook.com/profile.php?id=100092747371943" target="_blank" rel="noopener noreferrer">Visitar nuestra página de Facebook ↗</a>
-    <noscript><p>Consulta nuestras publicaciones en Facebook.</p></noscript>
+    <div class="section-header">
+      <span class="section-tag">BLOG Y NOVEDADES</span>
+      <h2 class="section-title" id="posts-heading">Publicaciones y <span>Artículos</span></h2>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="blog-categories" id="blog-categories" role="tablist" aria-label="Categorías del blog"></div>
+
+    <!-- Featured Publication -->
+    <div id="blog-featured" class="blog-featured-container"></div>
+
+    <!-- Publications Grid -->
+    <div class="blog-grid-section">
+      <h3 class="blog-grid-heading">Todas las publicaciones</h3>
+      <div id="blog-grid" class="blog-grid"></div>
+    </div>
   </section>
-  <dialog id="comments-dialog" class="comments-dialog" aria-labelledby="comments-title">
-    <div class="comments-header">
-      <div class="comments-header-title-row">
-        <h2 id="comments-title">Comentarios en Facebook</h2>
-        <div class="comments-tabs" role="tablist">
-          <button type="button" class="comments-tab active" id="tab-btn-native" role="tab" aria-selected="true">Comentarios en la Web</button>
-          <button type="button" class="comments-tab" id="tab-btn-embed" role="tab" aria-selected="false">Visor oficial de Facebook</button>
-        </div>
-      </div>
-      <button id="comments-close" type="button" aria-label="Cerrar comentarios">✕</button>
-    </div>
 
-    <!-- Tab 1: Native comments list with Facebook Login commenting (Option 2) -->
-    <div id="view-native-comments" class="comments-tab-panel active">
-      <div class="comments-scroll">
-        <p id="comments-status" role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); padding: 18px 0;"></p>
-        <div id="comments-list" class="comments-list" aria-live="polite"></div>
-        <button type="button" id="comments-retry" class="btn btn-secondary" style="margin: 12px auto; display: block;" hidden>Reintentar</button>
-        <button type="button" id="comments-more" class="btn btn-secondary" style="margin: 16px auto 0; display: block;" hidden>Ver más comentarios</button>
+  <!-- Full Article Reader Modal -->
+  <dialog id="blog-reader-dialog" class="blog-reader-dialog" aria-labelledby="reader-title">
+    <div class="reader-container">
+      <button id="reader-close" class="reader-close-btn" type="button" aria-label="Cerrar artículo">✕</button>
+      
+      <div class="reader-header">
+        <div class="reader-meta">
+          <span id="reader-category" class="blog-badge">Categoría</span>
+          <span class="reader-divider">•</span>
+          <span id="reader-date" class="reader-date">Fecha</span>
+          <span class="reader-divider">•</span>
+          <span id="reader-read-time" class="reader-read-time">Tiempo de lectura</span>
+        </div>
+        <h1 id="reader-title" class="reader-title">Título de la publicación</h1>
       </div>
 
-      <!-- Option 2: Facebook Login Comment Box -->
-      <div class="comment-compose-box">
-        <div id="fb-login-prompt" class="fb-login-prompt">
-          <div class="fb-login-prompt-content">
-            <span class="fb-icon-circle">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </span>
-            <div class="fb-login-prompt-text">
-              <strong>Comenta con tu perfil real de Facebook</strong>
-              <p>Conecta tu cuenta para que aparezca tu foto y nombre real.</p>
-            </div>
-          </div>
-          <button type="button" id="btn-facebook-login" class="btn btn-primary btn-fb">
-            Conectar con Facebook
-          </button>
-        </div>
-
-        <div id="fb-user-connected" class="fb-user-connected" hidden>
-          <div class="fb-user-badge">
-            <img id="fb-user-avatar" class="comment-avatar" src="" alt="Tu foto de Facebook">
-            <div class="fb-user-details">
-              <span>Comentando como <strong id="fb-user-name"></strong></span>
-              <button type="button" id="btn-facebook-logout" class="btn-link-small">Cambiar cuenta</button>
-            </div>
-          </div>
-          <form id="fb-comment-form" class="fb-comment-form">
-            <textarea id="fb-comment-input" rows="2" placeholder="Escribe tu comentario o pregunta aquí con tu cuenta de Facebook..." required></textarea>
-            <div class="fb-comment-actions">
-              <button type="submit" class="btn btn-primary" id="btn-submit-comment">Publicar comentario</button>
-            </div>
-          </form>
-        </div>
+      <div class="reader-hero-wrapper" id="reader-hero-wrapper">
+        <img id="reader-hero-img" class="reader-hero-img" src="" alt="">
       </div>
-    </div>
 
-    <!-- Tab 2: Official Facebook Post Embed / Widget (Option 3) -->
-    <div id="view-embed-comments" class="comments-tab-panel" hidden>
-      <div class="embed-scroll">
-        <div id="fb-embed-container" class="fb-embed-container">
-          <p style="text-align: center; padding: 24px; color: var(--text-muted);">Cargando visor oficial de Facebook…</p>
+      <article id="reader-body" class="reader-body">
+        <!-- Contenido formateado -->
+      </article>
+
+      <div class="reader-footer">
+        <div class="reader-nav-btns">
+          <button type="button" id="reader-prev-btn" class="btn btn-secondary">← Publicación anterior</button>
+          <button type="button" id="reader-next-btn" class="btn btn-secondary">Siguiente publicación →</button>
         </div>
+        <button type="button" id="reader-close-bottom" class="btn btn-primary">Volver a publicaciones</button>
       </div>
-    </div>
-
-    <div class="comments-footer">
-      <a id="comment-facebook" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Abrir en Facebook ↗</a>
     </div>
   </dialog>
-  <script src="posts-config.js?v=9.0" defer></script>
-  <script src="posts.js?v=9.0" defer></script>
+
+  <script src="blog-data.js?v=1.0" defer></script>
+  <script src="blog.js?v=1.0" defer></script>
 
   <!-- Contact & Request Section -->
   <section class="section reveal-on-scroll" id="contacto">
