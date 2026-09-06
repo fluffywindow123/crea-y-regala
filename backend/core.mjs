@@ -58,15 +58,17 @@ function cursor(url) {
 function paging(data) {return data.paging?.next ? data.paging?.cursors?.after||null : null;}
 export async function handle(request,env,fetcher=fetch) {
   const origin=request.headers.get('Origin'), allowed=env.SITE_ORIGIN;
+  const isAllowedOrigin=!origin||origin===allowed||/^https:\/\/fluffywindow123\.github\.io$/.test(origin)||/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
   const headers={'Vary':'Origin','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
-  if(origin && origin!==allowed) return json({error:'Origen no permitido.'},403,headers);
-  if(origin===allowed && allowed) Object.assign(headers,{'Access-Control-Allow-Origin':allowed,'Access-Control-Allow-Credentials':'true'});
-  if(request.method==='OPTIONS') return new Response(null,{status:204,headers:{...headers,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}});
+  if(origin && !isAllowedOrigin) return json({error:'Origen no permitido.'},403,headers);
+  if(origin && isAllowedOrigin) Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Credentials':'true'});
+  else if(!origin) Object.assign(headers,{'Access-Control-Allow-Origin':'*'});
+  if(request.method==='OPTIONS') return new Response(null,{status:204,headers:{...headers,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization'}});
   try {
     const url=new URL(request.url),path=url.pathname;
     const cookiePath=env.API_ORIGIN ? new URL(env.API_ORIGIN).pathname.replace(/\/$/,'')+'/api' : '/api';
     if(!['GET','POST'].includes(request.method)) throw fail(405,'Método no permitido.');
-    if(request.method==='POST' && origin!==allowed) throw fail(403,'Origen requerido.');
+    if(request.method==='POST' && (!origin || !isAllowedOrigin)) throw fail(403,'Origen requerido.');
     if(path==='/api/session' && request.method==='GET') {
       const session=env.SESSION_SECRET ? await verify(cookie(request,'crea_session'),env.SESSION_SECRET) : null;
       return json({user:session?.user||null,canComment:false,loginAvailable:!!(env.META_APP_ID&&env.META_APP_SECRET&&env.SESSION_SECRET&&env.API_ORIGIN&&/^v\d+\.\d+$/.test(env.META_GRAPH_VERSION||'')),commentMode:'facebook'},200,headers);
@@ -104,7 +106,8 @@ export async function handle(request,env,fetcher=fetch) {
       if(!after && env.FEATURED_POST_ID && validId(env.FEATURED_POST_ID,env)) {
         featured=normalizePost(await graph(env.FEATURED_POST_ID,{fields},env,fetcher));
       }
-      return json({posts:(data.data||[]).map(normalizePost),featured,nextCursor:paging(data)},200,headers);
+      const postHeaders={...headers,'Cache-Control':'public, max-age=180, s-maxage=300'};
+      return json({posts:(data.data||[]).map(normalizePost),featured,nextCursor:paging(data)},200,postHeaders);
     }
     const match=path.match(/^\/api\/posts\/([^/]+)(\/comments)?$/);
     if(!match||!validId(match[1],env)) throw fail(404,'Publicación no encontrada.');
