@@ -2079,8 +2079,7 @@ textarea { resize: vertical; }
 }
 .blog-featured-card {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 32px;
+  grid-template-columns: 1fr 1.25fr;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: 24px;
@@ -2088,6 +2087,9 @@ textarea { resize: vertical; }
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.blog-featured-card.no-media {
+  display: block;
 }
 .blog-featured-card:hover {
   transform: translateY(-4px);
@@ -2104,6 +2106,7 @@ textarea { resize: vertical; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.5s ease;
 }
 .blog-featured-card:hover .blog-featured-media img {
@@ -2113,7 +2116,7 @@ textarea { resize: vertical; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 32px 32px 32px 0;
+  padding: clamp(28px, 4vw, 44px);
 }
 .blog-featured-title {
   font-size: clamp(22px, 3vw, 28px);

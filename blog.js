@@ -161,14 +161,15 @@
     const otherPosts = filtered.slice(1);
 
     if (featuredContainer && featuredPost) {
+      const hasImage = Boolean(featuredPost.image);
       const featCard = document.createElement('article');
-      featCard.className = 'blog-featured-card';
+      featCard.className = `blog-featured-card ${hasImage ? 'has-media' : 'no-media'}`;
       featCard.tabIndex = 0;
       featCard.setAttribute('role', 'button');
       featCard.setAttribute('aria-label', `Leer destacado: ${featuredPost.title}`);
 
-      const featImg = featuredPost.image
-        ? `<div class="blog-featured-media"><img src="${featuredPost.image}" alt="${featuredPost.title}" loading="eager" onerror="this.parentElement.style.display='none'"></div>`
+      const featImg = hasImage
+        ? `<div class="blog-featured-media"><img src="${featuredPost.image}" alt="${featuredPost.title}" loading="eager" onerror="this.parentElement.style.display='none'; this.closest('.blog-featured-card')?.classList.replace('has-media','no-media');"></div>`
         : '';
 
       featCard.innerHTML = `
