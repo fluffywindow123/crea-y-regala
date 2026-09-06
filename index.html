@@ -13,7 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crea y Regala | Productos Personalizados y Diseños 3D</title>
   <meta name="description" content="Personalización de tazas sublimadas, termos en vinil e impresión 3D de alta calidad. Diseños únicos creados a tu medida en Crea y Regala.">
-  <link rel="stylesheet" href="styles.css?v=4.0">
+  <link rel="stylesheet" href="styles.css?v=5.0">
 </head>
 <body>
   <div id="fb-root"></div>
@@ -188,16 +188,17 @@
       <button id="comments-close" type="button" aria-label="Cerrar comentarios">✕</button>
     </div>
     <div class="comments-scroll">
-      <div id="fb-comments-container">
-        <p id="comments-status" role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); padding: 24px 0;">Cargando comentarios oficiales de Facebook…</p>
-      </div>
+      <p id="comments-status" role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); padding: 18px 0;"></p>
+      <div id="comments-list" class="comments-list" aria-live="polite"></div>
+      <button type="button" id="comments-retry" class="btn btn-secondary" style="margin: 12px auto; display: block;" hidden>Reintentar</button>
+      <button type="button" id="comments-more" class="btn btn-secondary" style="margin: 16px auto 0; display: block;" hidden>Ver más comentarios</button>
     </div>
     <div class="comments-footer" style="padding: 14px 24px; border-top: 1px solid var(--border-card); display: flex; justify-content: flex-end;">
       <a id="comment-facebook" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Ver o comentar en Facebook ↗</a>
     </div>
   </dialog>
-  <script src="posts-config.js?v=5.0" defer></script>
-  <script src="posts.js?v=5.0" defer></script>
+  <script src="posts-config.js?v=6.0" defer></script>
+  <script src="posts.js?v=6.0" defer></script>
 
   <!-- Contact & Request Section -->
   <section class="section reveal-on-scroll" id="contacto">

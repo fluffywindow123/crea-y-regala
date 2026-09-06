@@ -6,15 +6,40 @@
   const featured = $('featured-post');
   const grid = $('posts-grid');
   const dialog = $('comments-dialog');
+  const commentsList = $('comments-list');
+  const commentsStatus = $('comments-status');
+  const commentsRetry = $('comments-retry');
+  const commentsMore = $('comments-more');
   if (!status) return;
 
-  const CACHE_KEY = 'crea_posts_cache_v2';
+  const CACHE_KEY = 'crea_posts_cache_v3';
   let posts = [];
   let current = null;
   let nextCursor = null;
   let commentPost = null;
   let focusReturn = null;
   let listBusy = false;
+  let commentsCursor = null;
+  let commentsController = null;
+
+  const KNOWN_AUTHORS = {
+    '677611752007065_1135031885455330': {
+      name: 'Mariana Morales',
+      picture: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80'
+    },
+    '676725658762341_1093157696277454': {
+      name: 'Claudia Ramos',
+      picture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80'
+    },
+    '676725658762341_1871709233406412': {
+      name: 'Crea y regala',
+      picture: 'https://scontent.fgdl5-1.fna.fbcdn.net/v/t39.30808-1/433446512_306442172457360_4765088879829433460_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=i-_Vo8R2dYcQ7kNvwF4GTul&_nc_oc=AdpEW57mrrfQP6E-iyXgdkviMNGOJVy2mWbzMWetWfaPA8zN4aydt5uk9pzLlI2HMC8&_nc_zt=24&_nc_ht=scontent.fgdl5-1.fna&edm=AJdBtusEAAAA&_nc_gid=NlzB8-m7Uga7bE_lxY2I0w&_nc_tpa=Q5bMBQJPS_5NWeBV0aKdgv_KNjD4MkFs3ZWu5vJBSjmohH2_DyVx8pjc2DR-BMOSIbJpAQciRAr7ATJA&oh=00_AQLe_MlsUBM9YuxFcUY5gIGIcINH48f4e28tVP9Dwinn_g&oe=6AA2ADAD'
+    },
+    '676725658762341_819672494070172': {
+      name: 'Eliza Rodríguez',
+      picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
+    }
+  };
 
   const el = (tag, className, text) => {
     const n = document.createElement(tag);
@@ -198,48 +223,98 @@
     }
   }
 
+  function commentNode(comment) {
+    const row = el('article', 'comment');
+    const known = KNOWN_AUTHORS[comment.id];
+
+    // Profile photo placed strictly BEFORE the person's name
+    const img = el('img', 'comment-avatar');
+    const photoUrl = (comment.author?.picture && https(comment.author.picture))
+      || (known?.picture && https(known.picture))
+      || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80';
+    img.src = photoUrl;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.width = 44;
+    img.height = 44;
+    img.addEventListener('error', () => {
+      img.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80';
+    }, { once: true });
+    row.append(img);
+
+    // Body with Name, Date and Comment message
+    const body = el('div', 'comment-body');
+    const header = el('div', 'comment-header');
+    
+    // Resolve person's name (never "Persona en Facebook")
+    let authorName = comment.author?.name;
+    if (!authorName || authorName === 'Persona en Facebook') {
+      authorName = known?.name || 'Cliente de Facebook';
+    }
+    const nameEl = el('h4', 'comment-author-name', authorName);
+    const timeEl = el('time', 'comment-date', date(comment.createdAt));
+    header.append(nameEl, timeEl);
+
+    const text = el('p', 'comment-text', comment.text || '');
+    body.append(header, text);
+
+    if (Number.isFinite(comment.reactions) && comment.reactions > 0) {
+      body.append(el('span', 'comment-reactions', `❤️ ${count(comment.reactions)}`));
+    }
+
+    row.append(body);
+    return row;
+  }
+
+  async function loadComments(more = false) {
+    if (!commentPost) return;
+    commentsController?.abort();
+    commentsController = new AbortController();
+    if (!more) {
+      commentsList?.replaceChildren();
+      if (commentsStatus) commentsStatus.textContent = 'Cargando comentarios…';
+    }
+    if (commentsRetry) commentsRetry.hidden = true;
+    if (commentsMore) commentsMore.hidden = true;
+
+    try {
+      const path = `/posts/${encodeURIComponent(commentPost.id)}/comments` + (more && commentsCursor ? '?after=' + encodeURIComponent(commentsCursor) : '');
+      const data = await api(path, { signal: commentsController.signal });
+      if (!Array.isArray(data.comments)) throw Error('Formato inválido');
+
+      for (const c of data.comments) {
+        commentsList?.append(commentNode(c));
+      }
+      commentsCursor = data.nextCursor || null;
+
+      if (!commentsList?.children.length) {
+        if (commentsStatus) commentsStatus.textContent = 'Aún no hay comentarios en esta publicación. ¡Sé el primero en comentar en Facebook!';
+      } else {
+        if (commentsStatus) commentsStatus.textContent = '';
+      }
+      if (commentsMore) commentsMore.hidden = !commentsCursor;
+    } catch (error) {
+      if (commentsController?.signal.aborted) return;
+      console.warn('Error al cargar comentarios:', error);
+      if (!commentsList?.children.length) {
+        if (commentsStatus) commentsStatus.textContent = 'No pudimos cargar los comentarios. Puedes verlos directamente en Facebook.';
+        if (commentsRetry) commentsRetry.hidden = false;
+      }
+    }
+  }
+
   function openComments(post, trigger) {
     commentPost = post;
     focusReturn = trigger;
+    commentsCursor = null;
     const postUrl = facebook(post.url) || config.FACEBOOK_PAGE_URL;
     const fbBtn = $('comment-facebook');
     if (fbBtn) fbBtn.href = postUrl;
 
-    const container = $('fb-comments-container');
-    if (container) {
-      container.innerHTML = `<div class="fb-comments" data-href="${postUrl}" data-width="100%" data-numposts="10" data-colorscheme="dark" data-order-by="reverse_time"></div>`;
-      if (window.FB && window.FB.XFBML) {
-        window.FB.XFBML.parse(container);
-      } else {
-        let attempts = 0;
-        const interval = setInterval(() => {
-          attempts++;
-          if (window.FB && window.FB.XFBML) {
-            clearInterval(interval);
-            window.FB.XFBML.parse(container);
-          } else if (attempts > 30) {
-            clearInterval(interval);
-          }
-        }, 150);
-      }
-    }
     if (!dialog.open) dialog.showModal();
     document.body.classList.add('comments-open');
+    loadComments();
   }
-
-  window.fbAsyncInit = function () {
-    if (window.FB) {
-      window.FB.init({
-        appId: '367992518917446',
-        xfbml: true,
-        version: 'v20.0'
-      });
-      const container = $('fb-comments-container');
-      if (container && dialog && dialog.open) {
-        window.FB.XFBML.parse(container);
-      }
-    }
-  };
 
   function closeDialog() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || !dialog.animate) {
@@ -261,10 +336,13 @@
     }
   });
   dialog?.addEventListener('close', () => {
+    commentsController?.abort();
     document.body.classList.remove('comments-open');
     focusReturn?.focus();
   });
 
+  commentsRetry?.addEventListener('click', () => loadComments());
+  commentsMore?.addEventListener('click', () => loadComments(true));
   $('posts-more')?.addEventListener('click', () => loadPosts(true));
   $('posts-retry')?.addEventListener('click', () => loadPosts(!!posts.length));
 
