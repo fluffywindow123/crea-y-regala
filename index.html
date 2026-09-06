@@ -184,21 +184,75 @@
   </section>
   <dialog id="comments-dialog" class="comments-dialog" aria-labelledby="comments-title">
     <div class="comments-header">
-      <h2 id="comments-title">Comentarios en Facebook</h2>
+      <div class="comments-header-title-row">
+        <h2 id="comments-title">Comentarios en Facebook</h2>
+        <div class="comments-tabs" role="tablist">
+          <button type="button" class="comments-tab active" id="tab-btn-native" role="tab" aria-selected="true">Comentarios en la Web</button>
+          <button type="button" class="comments-tab" id="tab-btn-embed" role="tab" aria-selected="false">Visor oficial de Facebook</button>
+        </div>
+      </div>
       <button id="comments-close" type="button" aria-label="Cerrar comentarios">✕</button>
     </div>
-    <div class="comments-scroll">
-      <p id="comments-status" role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); padding: 18px 0;"></p>
-      <div id="comments-list" class="comments-list" aria-live="polite"></div>
-      <button type="button" id="comments-retry" class="btn btn-secondary" style="margin: 12px auto; display: block;" hidden>Reintentar</button>
-      <button type="button" id="comments-more" class="btn btn-secondary" style="margin: 16px auto 0; display: block;" hidden>Ver más comentarios</button>
+
+    <!-- Tab 1: Native comments list with Facebook Login commenting (Option 2) -->
+    <div id="view-native-comments" class="comments-tab-panel active">
+      <div class="comments-scroll">
+        <p id="comments-status" role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); padding: 18px 0;"></p>
+        <div id="comments-list" class="comments-list" aria-live="polite"></div>
+        <button type="button" id="comments-retry" class="btn btn-secondary" style="margin: 12px auto; display: block;" hidden>Reintentar</button>
+        <button type="button" id="comments-more" class="btn btn-secondary" style="margin: 16px auto 0; display: block;" hidden>Ver más comentarios</button>
+      </div>
+
+      <!-- Option 2: Facebook Login Comment Box -->
+      <div class="comment-compose-box">
+        <div id="fb-login-prompt" class="fb-login-prompt">
+          <div class="fb-login-prompt-content">
+            <span class="fb-icon-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </span>
+            <div class="fb-login-prompt-text">
+              <strong>Comenta con tu perfil real de Facebook</strong>
+              <p>Conecta tu cuenta para que aparezca tu foto y nombre real.</p>
+            </div>
+          </div>
+          <button type="button" id="btn-facebook-login" class="btn btn-primary btn-fb">
+            Conectar con Facebook
+          </button>
+        </div>
+
+        <div id="fb-user-connected" class="fb-user-connected" hidden>
+          <div class="fb-user-badge">
+            <img id="fb-user-avatar" class="comment-avatar" src="" alt="Tu foto de Facebook">
+            <div class="fb-user-details">
+              <span>Comentando como <strong id="fb-user-name"></strong></span>
+              <button type="button" id="btn-facebook-logout" class="btn-link-small">Cambiar cuenta</button>
+            </div>
+          </div>
+          <form id="fb-comment-form" class="fb-comment-form">
+            <textarea id="fb-comment-input" rows="2" placeholder="Escribe tu comentario o pregunta aquí con tu cuenta de Facebook..." required></textarea>
+            <div class="fb-comment-actions">
+              <button type="submit" class="btn btn-primary" id="btn-submit-comment">Publicar comentario</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="comments-footer" style="padding: 14px 24px; border-top: 1px solid var(--border-card); display: flex; justify-content: flex-end;">
-      <a id="comment-facebook" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Ver o comentar en Facebook ↗</a>
+
+    <!-- Tab 2: Official Facebook Post Embed / Widget (Option 3) -->
+    <div id="view-embed-comments" class="comments-tab-panel" hidden>
+      <div class="embed-scroll">
+        <div id="fb-embed-container" class="fb-embed-container">
+          <p style="text-align: center; padding: 24px; color: var(--text-muted);">Cargando visor oficial de Facebook…</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="comments-footer">
+      <a id="comment-facebook" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Abrir en Facebook ↗</a>
     </div>
   </dialog>
-  <script src="posts-config.js?v=7.0" defer></script>
-  <script src="posts.js?v=7.0" defer></script>
+  <script src="posts-config.js?v=8.0" defer></script>
+  <script src="posts.js?v=8.0" defer></script>
 
   <!-- Contact & Request Section -->
   <section class="section reveal-on-scroll" id="contacto">

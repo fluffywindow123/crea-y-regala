@@ -12,7 +12,9 @@
   const commentsMore = $('comments-more');
   if (!status) return;
 
-  const CACHE_KEY = 'crea_posts_cache_v3';
+  const CACHE_KEY = 'crea_posts_cache_v4';
+  const FB_DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%231877F2'/%3E%3Cpath d='M20 9a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 17c-6.63 0-12 3.58-12 8v1h24v-1c0-4.42-5.37-8-12-8z' fill='%23ffffff'/%3E%3C/svg%3E";
+
   let posts = [];
   let current = null;
   let nextCursor = null;
@@ -21,8 +23,7 @@
   let listBusy = false;
   let commentsCursor = null;
   let commentsController = null;
-
-  const FB_DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%231877F2'/%3E%3Cpath d='M20 9a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 17c-6.63 0-12 3.58-12 8v1h24v-1c0-4.42-5.37-8-12-8z' fill='%23ffffff'/%3E%3C/svg%3E";
+  let currentUser = null;
 
   const el = (tag, className, text) => {
     const n = document.createElement(tag);
@@ -208,7 +209,8 @@
 
   function commentNode(comment) {
     const row = el('article', 'comment');
-    // Profile photo placed strictly BEFORE the person's name
+
+    // 1. Profile photo placed strictly BEFORE the person's name
     const img = el('img', 'comment-avatar');
     const photoUrl = (comment.author?.picture && https(comment.author.picture)) || FB_DEFAULT_AVATAR;
     img.src = photoUrl;
@@ -221,10 +223,10 @@
     }, { once: true });
     row.append(img);
 
-    // Body with Name, Date and Comment message
+    // 2. Body with Name, Date and Comment message
     const body = el('div', 'comment-body');
     const header = el('div', 'comment-header');
-    
+
     // Use real Facebook name if returned, otherwise clean fallback
     let authorName = comment.author?.name;
     if (!authorName || authorName === 'Persona en Facebook') {
@@ -256,6 +258,18 @@
     if (commentsRetry) commentsRetry.hidden = true;
     if (commentsMore) commentsMore.hidden = true;
 
+    // Load any user comments stored locally for this post
+    if (!more) {
+      try {
+        const localComments = JSON.parse(localStorage.getItem('crea_local_comments_' + commentPost.id) || '[]');
+        if (Array.isArray(localComments)) {
+          for (const c of localComments) {
+            commentsList?.append(commentNode(c));
+          }
+        }
+      } catch {}
+    }
+
     try {
       const path = `/posts/${encodeURIComponent(commentPost.id)}/comments` + (more && commentsCursor ? '?after=' + encodeURIComponent(commentsCursor) : '');
       const data = await api(path, { signal: commentsController.signal });
@@ -267,7 +281,7 @@
       commentsCursor = data.nextCursor || null;
 
       if (!commentsList?.children.length) {
-        if (commentsStatus) commentsStatus.textContent = 'Aún no hay comentarios en esta publicación. ¡Sé el primero en comentar en Facebook!';
+        if (commentsStatus) commentsStatus.textContent = 'Aún no hay comentarios en esta publicación. ¡Sé el primero en comentar con tu Facebook!';
       } else {
         if (commentsStatus) commentsStatus.textContent = '';
       }
@@ -282,6 +296,61 @@
     }
   }
 
+  function updateAuthUI(user) {
+    currentUser = user;
+    const prompt = $('fb-login-prompt');
+    const connected = $('fb-user-connected');
+    const nameEl = $('fb-user-name');
+    const avatarEl = $('fb-user-avatar');
+
+    if (user && user.name) {
+      if (prompt) prompt.hidden = true;
+      if (connected) connected.hidden = false;
+      if (nameEl) nameEl.textContent = user.name;
+      if (avatarEl) avatarEl.src = user.picture || FB_DEFAULT_AVATAR;
+    } else {
+      if (prompt) prompt.hidden = false;
+      if (connected) connected.hidden = true;
+    }
+  }
+
+  function switchTab(tab) {
+    const tabNative = $('tab-btn-native');
+    const tabEmbed = $('tab-btn-embed');
+    const panelNative = $('view-native-comments');
+    const panelEmbed = $('view-embed-comments');
+    const embedContainer = $('fb-embed-container');
+
+    if (tab === 'embed') {
+      tabNative?.classList.remove('active');
+      tabNative?.setAttribute('aria-selected', 'false');
+      tabEmbed?.classList.add('active');
+      tabEmbed?.setAttribute('aria-selected', 'true');
+      if (panelNative) panelNative.style.display = 'none';
+      if (panelEmbed) {
+        panelEmbed.style.display = 'flex';
+        panelEmbed.hidden = false;
+      }
+
+      // Render official Facebook post embed iframe (Option 3)
+      if (commentPost && embedContainer) {
+        const postUrl = facebook(commentPost.url) || config.FACEBOOK_PAGE_URL;
+        const targetSrc = `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(postUrl)}&width=500&show_text=true`;
+        const currentIframe = embedContainer.querySelector('iframe');
+        if (!currentIframe || currentIframe.getAttribute('src') !== targetSrc) {
+          embedContainer.innerHTML = `<iframe src="${targetSrc}" width="100%" height="540" style="border:none;overflow:hidden;border-radius:12px;background:#18191a;width:100%;max-width:500px;min-height:500px;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" title="Publicación oficial de Facebook"></iframe>`;
+        }
+      }
+    } else {
+      tabEmbed?.classList.remove('active');
+      tabEmbed?.setAttribute('aria-selected', 'false');
+      tabNative?.classList.add('active');
+      tabNative?.setAttribute('aria-selected', 'true');
+      if (panelEmbed) panelEmbed.style.display = 'none';
+      if (panelNative) panelNative.style.display = 'flex';
+    }
+  }
+
   function openComments(post, trigger) {
     commentPost = post;
     focusReturn = trigger;
@@ -289,6 +358,13 @@
     const postUrl = facebook(post.url) || config.FACEBOOK_PAGE_URL;
     const fbBtn = $('comment-facebook');
     if (fbBtn) fbBtn.href = postUrl;
+
+    const embedContainer = $('fb-embed-container');
+    if (embedContainer) {
+      embedContainer.innerHTML = '<p style="text-align: center; padding: 24px; color: var(--text-muted);">Cargando visor oficial de Facebook…</p>';
+    }
+
+    switchTab('native');
 
     if (!dialog.open) dialog.showModal();
     document.body.classList.add('comments-open');
@@ -320,10 +396,140 @@
     focusReturn?.focus();
   });
 
+  $('tab-btn-native')?.addEventListener('click', () => switchTab('native'));
+  $('tab-btn-embed')?.addEventListener('click', () => switchTab('embed'));
+
+  // Option 2: Facebook Login Handler
+  $('btn-facebook-login')?.addEventListener('click', () => {
+    if (window.FB) {
+      window.FB.login(res => {
+        if (res.authResponse) {
+          window.FB.api('/me', { fields: 'id,name,picture.width(100).height(100)' }, user => {
+            if (user && user.name) {
+              const userData = {
+                id: user.id,
+                name: user.name,
+                picture: user.picture?.data?.url || null
+              };
+              try {
+                localStorage.setItem('crea_fb_user', JSON.stringify(userData));
+              } catch {}
+              updateAuthUI(userData);
+            }
+          });
+        }
+      }, { scope: 'public_profile' });
+    } else {
+      alert('Iniciando conexión con Facebook. Por favor asegúrate de permitir ventanas emergentes.');
+    }
+  });
+
+  $('btn-facebook-logout')?.addEventListener('click', () => {
+    try {
+      localStorage.removeItem('crea_fb_user');
+    } catch {}
+    if (window.FB) {
+      try {
+        window.FB.logout();
+      } catch {}
+    }
+    updateAuthUI(null);
+  });
+
+  // Submit comment form (Option 2)
+  $('fb-comment-form')?.addEventListener('submit', event => {
+    event.preventDefault();
+    const input = $('fb-comment-input');
+    const text = input ? input.value.trim() : '';
+    if (!text || !commentPost) return;
+
+    const user = currentUser || {
+      name: 'Usuario de Facebook',
+      picture: FB_DEFAULT_AVATAR
+    };
+
+    const newComment = {
+      id: 'local_' + Date.now(),
+      text,
+      createdAt: new Date().toISOString(),
+      reactions: 0,
+      author: {
+        name: user.name,
+        picture: user.picture || FB_DEFAULT_AVATAR
+      }
+    };
+
+    // Prepend new comment to the comments list
+    commentsList?.prepend(commentNode(newComment));
+    if (commentsStatus) commentsStatus.textContent = '';
+
+    // Save to local storage for this post
+    try {
+      const existing = JSON.parse(localStorage.getItem('crea_local_comments_' + commentPost.id) || '[]');
+      existing.unshift(newComment);
+      localStorage.setItem('crea_local_comments_' + commentPost.id, JSON.stringify(existing));
+    } catch {}
+
+    if (input) input.value = '';
+  });
+
   commentsRetry?.addEventListener('click', () => loadComments());
   commentsMore?.addEventListener('click', () => loadComments(true));
   $('posts-more')?.addEventListener('click', () => loadPosts(true));
   $('posts-retry')?.addEventListener('click', () => loadPosts(!!posts.length));
+
+  // Try to restore saved Facebook user
+  try {
+    const savedUser = JSON.parse(localStorage.getItem('crea_fb_user'));
+    if (savedUser && savedUser.name) {
+      updateAuthUI(savedUser);
+    }
+  } catch {}
+
+  // Initialize Meta SDK
+  function initFB() {
+    if (window.FB) {
+      try {
+        window.FB.init({
+          appId: config.FACEBOOK_APP_ID || '367992518917446',
+          cookie: true,
+          xfbml: true,
+          version: 'v20.0'
+        });
+
+        // Check active login status
+        window.FB.getLoginStatus(res => {
+          if (res && res.status === 'connected') {
+            window.FB.api('/me', { fields: 'id,name,picture.width(100).height(100)' }, user => {
+              if (user && user.name) {
+                const userData = {
+                  id: user.id,
+                  name: user.name,
+                  picture: user.picture?.data?.url || null
+                };
+                try {
+                  localStorage.setItem('crea_fb_user', JSON.stringify(userData));
+                } catch {}
+                updateAuthUI(userData);
+              }
+            });
+          }
+        });
+      } catch (e) {
+        console.warn('FB init error:', e);
+      }
+    }
+  }
+
+  if (window.FB) {
+    initFB();
+  } else {
+    const prevFbAsyncInit = window.fbAsyncInit;
+    window.fbAsyncInit = function () {
+      if (typeof prevFbAsyncInit === 'function') prevFbAsyncInit();
+      initFB();
+    };
+  }
 
   // Try to restore from cache instantly
   try {
