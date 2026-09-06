@@ -22,24 +22,7 @@
   let commentsCursor = null;
   let commentsController = null;
 
-  const KNOWN_AUTHORS = {
-    '677611752007065_1135031885455330': {
-      name: 'Mariana Morales',
-      picture: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80'
-    },
-    '676725658762341_1093157696277454': {
-      name: 'Claudia Ramos',
-      picture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80'
-    },
-    '676725658762341_1871709233406412': {
-      name: 'Crea y regala',
-      picture: 'https://scontent.fgdl5-1.fna.fbcdn.net/v/t39.30808-1/433446512_306442172457360_4765088879829433460_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=i-_Vo8R2dYcQ7kNvwF4GTul&_nc_oc=AdpEW57mrrfQP6E-iyXgdkviMNGOJVy2mWbzMWetWfaPA8zN4aydt5uk9pzLlI2HMC8&_nc_zt=24&_nc_ht=scontent.fgdl5-1.fna&edm=AJdBtusEAAAA&_nc_gid=NlzB8-m7Uga7bE_lxY2I0w&_nc_tpa=Q5bMBQJPS_5NWeBV0aKdgv_KNjD4MkFs3ZWu5vJBSjmohH2_DyVx8pjc2DR-BMOSIbJpAQciRAr7ATJA&oh=00_AQLe_MlsUBM9YuxFcUY5gIGIcINH48f4e28tVP9Dwinn_g&oe=6AA2ADAD'
-    },
-    '676725658762341_819672494070172': {
-      name: 'Eliza Rodríguez',
-      picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
-    }
-  };
+  const FB_DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%231877F2'/%3E%3Cpath d='M20 9a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 17c-6.63 0-12 3.58-12 8v1h24v-1c0-4.42-5.37-8-12-8z' fill='%23ffffff'/%3E%3C/svg%3E";
 
   const el = (tag, className, text) => {
     const n = document.createElement(tag);
@@ -225,20 +208,16 @@
 
   function commentNode(comment) {
     const row = el('article', 'comment');
-    const known = KNOWN_AUTHORS[comment.id];
-
     // Profile photo placed strictly BEFORE the person's name
     const img = el('img', 'comment-avatar');
-    const photoUrl = (comment.author?.picture && https(comment.author.picture))
-      || (known?.picture && https(known.picture))
-      || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80';
+    const photoUrl = (comment.author?.picture && https(comment.author.picture)) || FB_DEFAULT_AVATAR;
     img.src = photoUrl;
     img.alt = '';
     img.loading = 'lazy';
     img.width = 44;
     img.height = 44;
     img.addEventListener('error', () => {
-      img.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80';
+      img.src = FB_DEFAULT_AVATAR;
     }, { once: true });
     row.append(img);
 
@@ -246,10 +225,10 @@
     const body = el('div', 'comment-body');
     const header = el('div', 'comment-header');
     
-    // Resolve person's name (never "Persona en Facebook")
+    // Use real Facebook name if returned, otherwise clean fallback
     let authorName = comment.author?.name;
     if (!authorName || authorName === 'Persona en Facebook') {
-      authorName = known?.name || 'Cliente de Facebook';
+      authorName = 'Usuario de Facebook';
     }
     const nameEl = el('h4', 'comment-author-name', authorName);
     const timeEl = el('time', 'comment-date', date(comment.createdAt));
