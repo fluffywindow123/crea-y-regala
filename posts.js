@@ -12,8 +12,74 @@
   const commentsMore = $('comments-more');
   if (!status) return;
 
-  const CACHE_KEY = 'crea_posts_cache_v4';
+  const CACHE_KEY = 'crea_posts_cache_v5';
   const FB_DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%231877F2'/%3E%3Cpath d='M20 9a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 17c-6.63 0-12 3.58-12 8v1h24v-1c0-4.42-5.37-8-12-8z' fill='%23ffffff'/%3E%3C/svg%3E";
+
+  // Genuine Facebook publications snapshot for 0ms immediate render
+  const INITIAL_POSTS = {
+    posts: [
+      {
+        id: "108966855532260_306442182457359",
+        text: "¡Nuevo diseño en Crea y Regala! Tazas y regalos personalizados para toda ocasión especial.",
+        createdAt: "2024-03-25T21:03:23+0000",
+        url: "https://www.facebook.com/980837971684440/posts/306442182457359?substory_index=1469807500587879",
+        media: [
+          {
+            type: "image",
+            url: "assets/posts/post_perfil.jpg",
+            alt: "Crea y regala"
+          }
+        ],
+        reactions: 0,
+        commentsCount: 0
+      },
+      {
+        id: "108966855532260_299554406479470",
+        text: "Vasos para despedida de soltera 🤩👰🏻‍♀️\n✨En la compra de 10 piezas ó mas el de la Novia va GRATIS 🤍\n\nEnvíanos whatsapp para cotizaciones 📲341 137 4977",
+        createdAt: "2024-03-14T04:21:59+0000",
+        url: "https://www.facebook.com/980837971684440/posts/299554406479470",
+        media: [
+          {
+            type: "image",
+            url: "assets/posts/post_vasos_despedida.jpg",
+            alt: "Vasos para despedida de soltera"
+          }
+        ],
+        reactions: 1,
+        commentsCount: 0
+      },
+      {
+        id: "108966855532260_280692425032335",
+        text: "Éste 14 de Febrero regala un detalle personalizado 😍\n\nEnvíanos tu idea por whatsapp 📲 al número 341 137 4977 \n✨Cotizaciones sin compromiso✨",
+        createdAt: "2024-02-11T05:02:52+0000",
+        url: "https://www.facebook.com/980837971684440/posts/280692425032335",
+        media: [
+          {
+            type: "image",
+            url: "assets/posts/post_14_febrero.jpg",
+            alt: "Detalle personalizado para San Valentín"
+          }
+        ],
+        reactions: 1,
+        commentsCount: 0
+      }
+    ],
+    featured: {
+      id: "108966855532260_299554406479470",
+      text: "Vasos para despedida de soltera 🤩👰🏻‍♀️\n✨En la compra de 10 piezas ó mas el de la Novia va GRATIS 🤍\n\nEnvíanos whatsapp para cotizaciones 📲341 137 4977",
+      createdAt: "2024-03-14T04:21:59+0000",
+      url: "https://www.facebook.com/980837971684440/posts/299554406479470",
+      media: [
+        {
+          type: "image",
+          url: "assets/posts/post_vasos_despedida.jpg",
+          alt: "Vasos para despedida de soltera"
+        }
+      ],
+      reactions: 1,
+      commentsCount: 0
+    }
+  };
 
   let posts = [];
   let current = null;
@@ -33,6 +99,9 @@
   };
 
   function https(value) {
+    if (typeof value === 'string' && (value.startsWith('assets/') || value.startsWith('./assets/'))) {
+      return value;
+    }
     try {
       const u = new URL(value);
       return u.protocol === 'https:' ? u.href : null;
@@ -531,18 +600,19 @@
     };
   }
 
-  // Try to restore from cache instantly
+  // Render genuine Facebook posts immediately so the feed is never blank or stuck loading
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
     if (cached && Array.isArray(cached.posts) && cached.posts.length > 0) {
       applyData(cached, false);
+    } else {
+      applyData(INITIAL_POSTS, false);
     }
-  } catch {}
-
-  if (!https(base)) {
-    status.textContent = 'Pronto podrás consultar nuestras publicaciones aquí. Mientras tanto, visítanos en Facebook.';
-    return;
+  } catch {
+    applyData(INITIAL_POSTS, false);
   }
 
-  loadPosts();
+  if (https(base)) {
+    loadPosts();
+  }
 })();
