@@ -20,7 +20,7 @@ const BLOG_POSTS = [
         category: "Productos personalizados",
         date: "Sep 5, 2026",
         readTime: "2 minutos",
-        image: "assets/tazas.png",
+        image: "",
         excerpt: "Detalles personalizados para fiestas, regalos y momentos especiales.",
         content: `
         <p>🎉✨ ¡Bienvenidos a <strong>Crea y Regala</strong>! ✨🎉</p>
